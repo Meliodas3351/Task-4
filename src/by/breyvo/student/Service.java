@@ -8,7 +8,7 @@ public class Service {
     private final int MARK_TEN = 10;
 
     public void printAllStudents(Student[] student) {
-        for (Student student1:student) {
+        for (Student student1 : student) {
             System.out.println(student.toString());
         }
     }
@@ -27,7 +27,7 @@ public class Service {
         for (int k = 0; k < students.length; k++) {
             boolean proverka = true;
             for (int i = 0; i < students[k].getArrayOfMarks().length; i++) {
-                if (students[k].getArrayOfMarks()[i] != MARK_NINE && students[k].getArrayOfMarks()[i] != MARK_TEN) {
+                if (students[k].getArrayOfMarks()[i] <= MARK_NINE) {
                     proverka = false;
                     break;
                 }

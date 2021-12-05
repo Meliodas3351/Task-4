@@ -15,8 +15,8 @@ public class Service {
     }
 
     public void printAllTrains(Train[] trains) {
-        for (int k = 0; k < trains.length; k++) {
-            System.out.println(trains[k].toString());
+        for (Train train : trains) {
+            System.out.println(train.toString());
         }
     }
 

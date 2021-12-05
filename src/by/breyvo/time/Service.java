@@ -1,91 +1,120 @@
 package by.breyvo.time;
 
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class Service {
-    private int hours;
-    private int minutes;
-    private int seconds;
-    private LocalTime localTime;
+    Time time;
 
-    public int getHours() {
-        return hours;
-    }
+    final int MAX_LIMIT_FOR_HOURS = 24;
+    final int MAX_LIMIT_FOR_MINUTES_AND_SECONDS = 60;
+    final int MAX_LIMIT_TO_PLUS_TIME_FOR_HOURS = 100;
 
-    public void setHours(int hours) {
-        this.hours = hours % 24;
-        printLocalTime();
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public void setMinutes(int minutes) {
-        this.minutes = minutes % 60;
-        printLocalTime();
-    }
-
-    public int getSeconds() {
-        return seconds;
-    }
-
-    public void setSeconds(int seconds) {
-        this.seconds = seconds % 60;
-        printLocalTime();
-    }
+    String[] actionsWithTime = new String[]{"Print Time", "Change a Field", "Plus Time", "Minus Time", "Exit"};
+    String[] fieldsOfTime = new String[]{"Hours", "Minutes", "Seconds"};
+    Scanner scanner = new Scanner(System.in);
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_TIME;
+    Icon icon = new ImageIcon();
 
     void creatTheTime() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter hours - ");
-        String str1 = scanner.nextLine();
-        try {
-            this.hours = Integer.parseInt(str1);
-            if (this.hours > 23 || this.hours < 0) {
-                this.hours = 0;
-            }
-        } catch (NumberFormatException e) {
-            this.hours = 0;
-        }
-        System.out.print("Enter minutes - ");
-        str1 = scanner.nextLine();
-        try {
-            this.minutes = Integer.parseInt(str1);
-            if (this.minutes > 59 || this.minutes < 0) {
-                this.minutes = 0;
-            }
-        } catch (NumberFormatException e) {
-            this.minutes = 0;
-        }
-        System.out.print("Enter seconds - ");
-        str1 = scanner.nextLine();
-        try {
-            this.seconds = Integer.parseInt(str1);
-            if (this.seconds > 59 || this.seconds < 0) {
-                this.seconds = 0;
-            }
-        } catch (NumberFormatException e) {
-            this.seconds = 0;
-        }
-        printLocalTime();
+        int hours, minutes, seconds;
+        String message = "Please, enter value for hours:";
+        hours = enterFieldsForTime(message, MAX_LIMIT_FOR_HOURS);
+        message = "Please, enter value for minutes:";
+        minutes = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        message = "Please, enter value for seconds:";
+        seconds = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        this.time = new Time(hours, minutes, seconds);
+        printTime();
     }
 
-    void printLocalTime() {
-        this.localTime = LocalTime.of(this.getHours(), this.getMinutes(), this.getSeconds());
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
-        System.out.println(this.localTime.format(formatter));
+    int enterFieldsForTime(String messageForInput, int maxLimitForInput) {
+        int k = 0;
+        try {
+            k = Integer.parseInt(JOptionPane.showInputDialog(null, messageForInput, "Enter field", JOptionPane.QUESTION_MESSAGE));
+            if (k >= maxLimitForInput || k < 0) {
+                JOptionPane.showMessageDialog(null, "Incorrect input. Field value changed to 00", "Error", JOptionPane.ERROR_MESSAGE);
+                k = 0;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Incorrect input. Field value changed to 00", "Error", JOptionPane.ERROR_MESSAGE);
+            k = 0;
+        }
+        return k;
     }
 
-    void plusTime(int hours, int minutes, int seconds) {
-        this.seconds += seconds;
-        this.minutes += minutes + this.seconds / 60;
-        this.hours += hours + this.minutes / 60;
-        this.seconds %= 60;
-        this.minutes %= 60;
-        this.hours %= 24;
-        this.localTime = LocalTime.of(this.getHours(), this.getMinutes(), this.getSeconds());
-        printLocalTime();
+    void printTime() {
+        String message = "Time changed: " + this.time.getLocalTime().format(formatter);
+        JOptionPane.showMessageDialog(null, message, "Information", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    void choiseOfAction() {
+
+        String action;
+        //{"Print Time","Change a Field","Plus Time","Minus Time","Exit"};
+        do {
+            action = (String) JOptionPane.showInputDialog(null, "Please, choose the action:", "Message", JOptionPane.QUESTION_MESSAGE, icon, actionsWithTime, actionsWithTime[0]);
+            if (action.equals(actionsWithTime[0])) {
+                printTime();
+            } else if (action.equals(actionsWithTime[1])) {
+                setFieldOfTime();
+            } else if (action.equals(actionsWithTime[2])) {
+                plusTime();
+            } else if (action.equals(actionsWithTime[3])) {
+                minusTime();
+            }
+        } while (!action.equals(actionsWithTime[4]));
+        JOptionPane.showMessageDialog(null, "Successful completion of the program", "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    void setFieldOfTime() {
+        String field = (String) JOptionPane.showInputDialog(null, "Please, choose a field:", "Message", JOptionPane.QUESTION_MESSAGE, icon, fieldsOfTime, fieldsOfTime[0]);
+        if (field.equals(fieldsOfTime[0])) {
+            String message = "Please, enter new value for hours:";
+            this.time.setHours(enterFieldsForTime(message, MAX_LIMIT_FOR_HOURS));
+            printTime();
+        } else if (field.equals(fieldsOfTime[1])) {
+            String message = "Please, enter new value for minutes:";
+            this.time.setMinutes(enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS));
+            printTime();
+        } else if (field.equals(fieldsOfTime[2])) {
+            String message = "Please, enter new value for seconds:";
+            this.time.setSeconds(enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS));
+            printTime();
+        }
+    }
+
+    void plusTime() {
+        int hours, minutes, seconds;
+        String message = "Please, enter value for hours:";
+        hours = enterFieldsForTime(message, MAX_LIMIT_TO_PLUS_TIME_FOR_HOURS);
+        message = "Please, enter value for minutes:";
+        minutes = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        message = "Please, enter value for seconds:";
+        seconds = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        int time = (this.time.getHours() + hours) * 3600 + (this.time.getMinutes() + minutes) * 60 + (this.time.getSeconds() + seconds);
+        this.time.setHours((time / (3600)) % 24);
+        time %= 3600;
+        this.time.setMinutes(time / 60);
+        this.time.setSeconds(time % 60);
+        printTime();
+    }
+
+    void minusTime() {
+        int hours, minutes, seconds;
+        String message = "Please, enter value for hours:";
+        hours = enterFieldsForTime(message, MAX_LIMIT_TO_PLUS_TIME_FOR_HOURS);
+        message = "Please, enter value for minutes:";
+        minutes = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        message = "Please, enter value for seconds:";
+        seconds = enterFieldsForTime(message, MAX_LIMIT_FOR_MINUTES_AND_SECONDS);
+        int time = (this.time.getHours() + 24 - hours % 24) * 3600 + (this.time.getMinutes() - minutes) * 60 + (this.time.getSeconds() - seconds);
+        this.time.setHours((time / (3600)) % 24);
+        time %= 3600;
+        this.time.setMinutes(time / 60);
+        this.time.setSeconds(time % 60);
+        printTime();
+    }
+
 }
