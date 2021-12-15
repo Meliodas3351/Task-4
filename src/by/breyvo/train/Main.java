@@ -1,13 +1,16 @@
 package by.breyvo.train;
 
+import java.time.LocalTime;
+
 public class Main {
     public static void main(String[] args) {
-        Train train1 = new Train("Hrodno", 731, "15:17");
-        Train train2 = new Train("Gomel", 684, "00:25");
-        Train train3 = new Train("Brest", 667, "11:52");
-        Train train4 = new Train("Vitebsk", 712, "06:45");
-        Train train5 = new Train("Moscow", 718, "16:00");
-        Train train6 = new Train("Hrodno", 687, "07:08");
+
+        Train train1 = new Train("Hrodno", 731, LocalTime.of(23, 15));
+        Train train2 = new Train("Gomel", 684, LocalTime.of(0, 25));
+        Train train3 = new Train("Brest", 667, LocalTime.of(11, 52));
+        Train train4 = new Train("Vitebsk", 712, LocalTime.of(6, 45));
+        Train train5 = new Train("Moscow", 718, LocalTime.of(16, 0));
+        Train train6 = new Train("Hrodno", 687, LocalTime.of(7, 8));
 
         Train[] trains = new Train[]{train1, train2, train3, train4, train5, train6};
 

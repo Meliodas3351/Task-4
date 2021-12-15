@@ -8,10 +8,10 @@ public class Train {
     private int numberOfTrain;
     private LocalTime time;
 
-    public Train(String destination, int numberOfTrain, String time) {
+    public Train(String destination, int numberOfTrain, LocalTime localTime) {
         this.destination = destination;
         this.numberOfTrain = numberOfTrain;
-        this.time = LocalTime.parse(time, DateTimeFormatter.ISO_TIME);
+        this.time = localTime;
     }
 
     public String getDestination() {
@@ -43,7 +43,7 @@ public class Train {
         return "Train " +
                 "to " + destination +
                 ", number " + numberOfTrain +
-                ", time=" + time +
+                ", time = " + time +
                 '.';
     }
 }
